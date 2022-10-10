@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  nginx-spa:
+    container_name: spa
+    build:
+      context: .
+    restart: always
+    ports:
+      - "3000:80"
