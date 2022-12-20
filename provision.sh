@@ -1,6 +1,6 @@
-apt-get -y update
-apt-get -y install nginx
+apt-get update
+apt-get install -y nginx
 
 cp /vagrant/server_config /etc/nginx/sites-enabled/default
 
-service nginx start
+service nginx restart
