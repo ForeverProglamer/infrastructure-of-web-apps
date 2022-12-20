@@ -1,0 +1,10 @@
+server {
+  root /vagrant/static/html;
+
+  location / {
+  }
+
+  location /css {
+    root /vagrant/static;
+  }
+}
