@@ -1,10 +1,41 @@
 version: "3.8"
 
 services:
-  nginx-spa:
-    container_name: spa
+  nginx:
+    container_name: http-server
     build:
       context: .
+      dockerfile: Dockerfile.nginx
     restart: always
     ports:
       - "80:80"
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: always
+    depends_on:
+      - nginx
+      - database
+      - mongodb
+    env_file: .env
+  database:
+    container_name: db
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  mongodb:
+    container_name: mongo
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - mongodb:/data/db
+volumes:
+  postgres:
+  mongodb:
