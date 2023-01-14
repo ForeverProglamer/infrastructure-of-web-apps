@@ -5,3 +5,5 @@ __pycache__
 env
 .vagrant
 sample.conf
+dev.env
+docker-compose.dev.yml

@@ -8,15 +8,10 @@ from psycopg2.extensions import connection
 from psycopg2.extras import RealDictCursor
 from psycopg2.errors import Error
 
-from dictionary.domain import Dictionary, Wordlist, WordlistRow
+from dictionary.schemas.postgres import Dictionary, Wordlist, WordlistRow
+from dictionary.config import POSTGRES_DB_CONFIG
 
 log = getLogger(__name__)
-
-db_config = {
-    'host': os.getenv('DB_HOST'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD')
-}
 
 CREATE_DB_SQL = f"""CREATE DATABASE {os.getenv('DB_NAME')}""" 
 
@@ -91,7 +86,7 @@ def pg_connection(autocommit: bool = False) -> Callable[..., Callable[..., T]]:
         @wraps(fn)
         def args_wrapper(*args, **kwargs) -> T:
             try:
-                conn = connect(**db_config)
+                conn = connect(**POSTGRES_DB_CONFIG)
                 conn.autocommit = autocommit
                 res = fn(conn, *args, **kwargs)
             except Error as e:
@@ -122,7 +117,7 @@ def _create_db(conn: connection) -> None:
     except Error as e:
         log.exception(e)
     finally:
-        db_config['database'] = os.getenv('DB_NAME')
+        POSTGRES_DB_CONFIG['database'] = os.getenv('DB_NAME')
 
 
 @pg_connection()

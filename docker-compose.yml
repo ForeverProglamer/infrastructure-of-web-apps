@@ -23,6 +23,7 @@ services:
   database:
     container_name: db
     image: postgres:alpine
+    restart: always
     environment:
       - POSTGRES_PASSWORD=$DB_PASSWORD
     volumes:
